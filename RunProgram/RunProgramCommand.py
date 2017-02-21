@@ -8,13 +8,18 @@ import sys
 
 class runprogramCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
-		#print(self.view.file_name())
+		currentWindow = self.view.window()
+		currentWindow.show_input_panel("Arguments: ", "", self.on_done, None, None)
+
+	def on_done(self, text):
+
 		filepath = self.view.file_name()
-		#folderPath = self.get_folder_path(javaFilepath)
 		folderpath, filename = head, tail = os.path.split(filepath)
 		
+		print(text)
+
 		compileCmd = "javac " + filepath
-		runCmd = "java -classpath " + folderpath + " " + filename.rstrip(".java")
+		runCmd = "java -classpath " + folderpath + " " + filename.rstrip(".java") + " " + text
 		delCmd = filepath.rstrip("java") + "class"
 		
 		compileOut = subprocess.Popen(compileCmd, shell=True, stderr=PIPE).communicate()[1]
